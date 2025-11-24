@@ -11,8 +11,9 @@ LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 source "$LIB_DIR/output.sh"
 source "$LIB_DIR/prerequisites.sh"
-source "$LIB_DIR/k8s_checks.sh"
+source "$LIB_DIR/http.sh"
+source "$LIB_DIR/kubernetes.sh"
 
 # Set up cleanup trap for port-forwards
-setup_cleanup_trap
+trap cleanup_port_forwards EXIT INT TERM
 

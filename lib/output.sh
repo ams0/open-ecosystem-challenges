@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# output.sh - Shared library for styled output using Gum
-# This library provides consistent output formatting across all smoke test scripts
-
 # Print a styled header with multiple lines
 # Usage: print_header "Line 1" "Line 2" "Line 3"
 print_header() {
@@ -76,6 +73,43 @@ print_step() {
 # Print test section header
 # Usage: print_test_section "Section name"
 print_test_section() {
-  gum style --foreground 212 --bold "🔬 $*"
+  gum style --bold "🔬 $*"
 }
 
+# Print a new line
+# Usage: print_new_line
+print_new_line() {
+  echo ""
+}
+
+print_test_summary() {
+  local level=$1
+  local docs_url=$2
+  local objective=$3
+
+  print_header "Test Results Summary"
+
+  if [[ $TESTS_FAILED -eq 0 ]]; then
+    # test succeeded
+    print_success "✅ PASSED: All $TESTS_PASSED checks passed"
+    print_new_line
+    print_info "It looks like you successfully completed this level! 🌟"
+
+    print_info "Next steps:"
+    print_info_indent "1. Commit your changes: git add . && git commit -m 'Solved Challenge'"
+    print_info_indent "2. Push to main: git push origin main"
+    print_info_indent "3. Manually trigger the 'Verify Adventure' workflow on GitHub Actions"
+    print_info_indent "4. Once verified, share your success with the community! 🎉"
+    print_new_line
+    print_info "📖 For detailed verification instructions, see: https://dynatrace-oss.github.io/open-ecosystem-challenges/verification/"
+    exit
+  fi
+
+  # test failed
+  print_error "❌ FAILED: $TESTS_FAILED check(s) failed, $TESTS_PASSED passed"
+  print_new_line
+  gum style --bold "🎯 Challenge Objective:"
+  print_info "$objective"
+  print_new_line
+  print_info "See $DOCS_URL for details"
+}
